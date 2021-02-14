@@ -1,0 +1,34 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+<table class="table-bordered profile-table">
+    <tr>
+        <th>
+            Profile Details
+        </th>
+    </tr>
+    <tr>
+        <td>
+            <div class="profile-user">{{ user.username }}</div>
+            <div class="profile-follower">{{ user.follower|length }}</div>
+            <div class="profile-following">{{ user.following|length }}</div>
+        </td>
+    </tr>
+</table>
+
+{% for post in posts %}
+<table class="table-bordered post-table">
+    <tr>
+        <th>
+            <a class="edit_post" href="#"></a>{{ post.user }}
+        </th>
+    </tr>
+    <tr>
+        <td>
+            <div class="post-time">{{ post.time }}</div>
+            <div class="post-content">{{ post.content }}</div>
+        </td>
+    </tr>
+</table>
+{% endfor %}
+{% endblock %}

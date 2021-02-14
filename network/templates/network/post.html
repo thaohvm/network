@@ -1,0 +1,35 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+<h2>All Posts</h2>
+
+<!-- New Post -->
+<h3>New Post</h3>
+<div class="item">
+    <form action="{% url 'post' %}" method="post">
+        {% csrf_token %}
+        <table class="create_form">
+            {{ new_post_form.as_table }}
+        </table>
+        <input class="submit_button" type="submit" value="Post">
+    </form>
+</div>
+
+<!-- List of posts -->
+{% for post in posts %}
+<table class="table-bordered post-table">
+    <tr>
+        <th>
+            <a class="edit_post" href="#"></a>{{ post.user }}
+        </th>
+    </tr>
+    <tr>
+        <td>
+            <div class="post-time">{{ post.time }}</div>
+            <div class="post-content">{{ post.content }}</div>
+        </td>
+    </tr>
+</table>
+{% endfor %}
+
+{% endblock %}
