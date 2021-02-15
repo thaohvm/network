@@ -27,6 +27,12 @@
         <td>
             <div class="post-time">{{ d.0.time }}</div>
             <div class="post-content">{{ d.0.content }}</div>
+            {% if d.1 %}
+            <div class="post-like-action" data-post-id="{{ d.0.id }}" data-like="False">Unlike</div>
+            {% else %}
+            <div class="post-like-action" data-post-id="{{ d.0.id }}" data-like="True">Like</div>
+            {% endif %}
+            <div class="post-like-total">Total like: {{ d.0.like.count }}</div>
         </td>
     </tr>
 </table>

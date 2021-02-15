@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadReque
 from django.shortcuts import render
 from django.urls import reverse
 
-from .forms import NewPostForm, LikedForm
+from .forms import NewPostForm
 from .models import User, Post
 
 
@@ -77,9 +77,8 @@ def post(request):
     else:
         # GET
         posts = sorted(Post.objects.all(), reverse=True, key=lambda p: p.time)
-        data = []  # Tuples of (post, like->boolean)
-        for post in posts:
-            data.append((post, request.user in post.liked))
+        # Tuples of (post, like->boolean)
+        data = [(post, request.user in post.like.all()) for post in posts]
         return render(request, "network/post.html", {
             "data": data,
             "new_post_form": NewPostForm(None, initial={}),
@@ -104,3 +103,4 @@ def profile(request, username=None):
 @login_required
 def like(request):
     if request.method == "POST":
+        pass

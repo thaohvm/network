@@ -13,7 +13,7 @@ class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField(max_length=256, blank=True)
     time = models.DateTimeField(auto_now=True)
-    liked = models.ManyToManyField(User, blank=True, related_name="user_liked")
+    like = models.ManyToManyField(User, blank=True, related_name="user_like")
 
     def __str__(self):
-        return f"{self.user}"
+        return f"{self.user} - {self.content}"
