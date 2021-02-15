@@ -11,4 +11,5 @@ urlpatterns = [
     path("post", views.post, name="post"),
     path("profile", views.profile, name="profile"),
     path("profile/<str:username>", views.profile, name="profile"),
+    path("like", views.like, name="like"),
 ]

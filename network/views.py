@@ -1,10 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import render
 from django.urls import reverse
 
-from .forms import NewPostForm
+from .forms import NewPostForm, LikedForm
 from .models import User, Post
 
 
@@ -64,6 +65,7 @@ def register(request):
         return render(request, "network/register.html")
 
 
+@login_required
 def post(request):
     if request.method == "POST":
         form = NewPostForm(request.POST)
@@ -75,12 +77,16 @@ def post(request):
     else:
         # GET
         posts = sorted(Post.objects.all(), reverse=True, key=lambda p: p.time)
+        data = []  # Tuples of (post, like->boolean)
+        for post in posts:
+            data.append((post, request.user in post.liked))
         return render(request, "network/post.html", {
-            "posts": posts,
+            "data": data,
             "new_post_form": NewPostForm(None, initial={}),
         })
 
 
+@login_required
 def profile(request, username=None):
     if request.method == "GET":
         try:
@@ -93,3 +99,8 @@ def profile(request, username=None):
             })
         except User.DoesNotExist:
             return HttpResponseBadRequest("Invalid username!")
+
+
+@login_required
+def like(request):
+    if request.method == "POST":

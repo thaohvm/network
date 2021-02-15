@@ -16,17 +16,17 @@
 </div>
 
 <!-- List of posts -->
-{% for post in posts %}
+{% for d in data %}
 <table class="table-bordered post-table">
     <tr>
         <th>
-            <a class="edit_post" href="#"></a>{{ post.user }}
+            <a class="edit_post" href="#"></a>{{ d.0.user }}
         </th>
     </tr>
     <tr>
         <td>
-            <div class="post-time">{{ post.time }}</div>
-            <div class="post-content">{{ post.content }}</div>
+            <div class="post-time">{{ d.0.time }}</div>
+            <div class="post-content">{{ d.0.content }}</div>
         </td>
     </tr>
 </table>
