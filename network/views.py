@@ -1,16 +1,20 @@
+import json
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 
 from .forms import NewPostForm
 from .models import User, Post
 
 
+@login_required(login_url='/login')
 def index(request):
-    return render(request, "network/index.html")
+    return HttpResponseRedirect(reverse("post"))
 
 
 def login_view(request):
@@ -65,7 +69,7 @@ def register(request):
         return render(request, "network/register.html")
 
 
-@login_required
+@login_required(login_url='/login')
 def post(request):
     if request.method == "POST":
         form = NewPostForm(request.POST)
@@ -85,7 +89,7 @@ def post(request):
         })
 
 
-@login_required
+@login_required(login_url='/login')
 def profile(request, username=None):
     if request.method == "GET":
         try:
@@ -100,10 +104,23 @@ def profile(request, username=None):
             return HttpResponseBadRequest("Invalid username!")
 
 
-@login_required
+@csrf_exempt
+@login_required(login_url='/login')
 def like(request):
-    if request.method != "POST":
-        return JsonResponse({"error": "POST request required."}, status=400)
+    if request.method != "PUT":
+        return JsonResponse({"error": "PUT request required."}, status=400)
     data = json.loads(request.body)
-    print(data)
-    return JsonResponse({"message": "Like updated."}, status=201)
+    try:
+        post = Post.objects.get(id=int(data["id"]))
+        # Make update
+        if data["action"] == "like":
+            if request.user not in post.like.all():
+                post.like.add(request.user)
+                post.save()
+        else:
+            if request.user in post.like.all():
+                post.like.remove(request.user)
+                post.save()
+        return JsonResponse({"action": data["action"], "likes": len(post.like.all())}, status=200)
+    except Post.DoesNotExist:
+        return JsonResponse({"error": "Post doesn't exist."}, status=400)
