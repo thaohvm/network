@@ -12,4 +12,5 @@ urlpatterns = [
     path("profile", views.profile, name="profile"),
     path("profile/<str:username>", views.profile, name="profile"),
     path("like", views.like, name="like"),
+    path("follow", views.follow, name="follow"),
 ]

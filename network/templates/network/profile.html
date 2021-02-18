@@ -1,4 +1,5 @@
 {% extends "network/layout.html" %}
+{% load static %}
 
 {% block body %}
 <table class="table-bordered profile-table">
@@ -10,8 +11,17 @@
     <tr>
         <td>
             <div class="profile-user">{{ user.username }}</div>
-            <div class="profile-follower">{{ user.follower|length }}</div>
-            <div class="profile-following">{{ user.following|length }}</div>
+            {% if show_follow %}
+                <!-- Follow/Unfollow button -->
+                {% if followed %}
+                <button id="follow-user" data-user-id="{{ user.id }}">Unfollow</button>
+                {% else %}
+                <button id="follow-user" data-user-id="{{ user.id }}">Follow</button>
+                {% endif %}
+            {% endif %}
+            <!-- Number of follower/following -->
+            <div id="profile-follower">{{ followers }} Followers</div>
+            <div id="profile-following">{{ followings }} Followings</div>
         </td>
     </tr>
 </table>
@@ -31,4 +41,8 @@
     </tr>
 </table>
 {% endfor %}
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'network/follow.js' %}"></script>
 {% endblock %}

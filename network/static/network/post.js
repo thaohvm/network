@@ -7,7 +7,7 @@ function initialze_like_onclick() {
     for (let i = 0; i < like_buttons.length; i++)
         like_buttons[i].onclick = function (e) {
             console.log("Action: " + e.target.dataset.action + " - Post ID: " + e.target.dataset.postId);
-            fetch(`like`, {
+            fetch("like", {
                 method: 'PUT',
                 body: JSON.stringify({
                     action: e.target.dataset.action,

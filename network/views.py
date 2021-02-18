@@ -99,6 +99,10 @@ def profile(request, username=None):
             return render(request, "network/profile.html", {
                 "user": user,
                 "posts": posts,
+                "show_follow": user != request.user,
+                "followed": request.user in user.follower.all(),
+                "followers": len(user.follower.all()),
+                "followings": len(user.following.all()),
             })
         except User.DoesNotExist:
             return HttpResponseBadRequest("Invalid username!")
@@ -124,3 +128,29 @@ def like(request):
         return JsonResponse({"action": data["action"], "likes": len(post.like.all())}, status=200)
     except Post.DoesNotExist:
         return JsonResponse({"error": "Post doesn't exist."}, status=400)
+
+
+@csrf_exempt
+@login_required(login_url='/login')
+def follow(request):
+    if request.method != "PUT":
+        return JsonResponse({"error": "PUT request required."}, status=400)
+    data = json.loads(request.body)
+    try:
+        user = User.objects.get(id=int(data["id"]))
+        # Make update
+        if data["action"] == "Follow":
+            if request.user not in user.follower.all():
+                user.follower.add(request.user)
+                user.save()
+                request.user.following.add(user)
+                request.user.save()
+        else:
+            if request.user in user.follower.all():
+                user.follower.remove(request.user)
+                user.save()
+                request.user.following.remove(user)
+                request.user.save()
+        return JsonResponse({"action": data["action"], "followers": len(user.follower.all())}, status=200)
+    except User.DoesNotExist:
+        return JsonResponse({"error": "User doesn't exist."}, status=400)
