@@ -1,15 +1,31 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    <h2>Following List</h2>
+<h2>Following List</h2>
 
-    <ul>
-        <table id="following-list">
-            {% for fl in following_list %} 
-            <tr>
-                <td><a href= "profile/{{ fl.username }}">{{ fl.username }}</a></td>
-            </tr>
-            {% endfor %}
-        </table>
-    </ul>
+<ul>
+    <table id="following-list">
+        {% for fl in following_list %}
+        <tr>
+            <td><a href="profile/{{ fl.username }}">{{ fl.username }}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</ul>
+
+{% for post in posts %}
+<table class="table-bordered post-table">
+    <tr>
+        <th>
+            <a class="edit_post" href="#"></a>{{ post.user }}
+        </th>
+    </tr>
+    <tr>
+        <td>
+            <div class="post-time">{{ post.time }}</div>
+            <div class="post-content">{{ post.content }}</div>
+        </td>
+    </tr>
+</table>
+{% endfor %}
 {% endblock %}

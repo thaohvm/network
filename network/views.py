@@ -155,9 +155,14 @@ def follow(request):
     except User.DoesNotExist:
         return JsonResponse({"error": "User doesn't exist."}, status=400)
 
-
+@login_required(login_url='/login')
 def following_list(request):
     if request.method == "GET":
+        posts = []
+        following_list = request.user.following.all()
+        for fl in following_list:
+            posts.extend(Post.objects.filter(user=fl))
         return render(request, 'network/following.html', {
-            "following_list": request.user.following.all()
+            "following_list": following_list,
+            "posts": posts
         })
