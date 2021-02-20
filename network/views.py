@@ -154,3 +154,10 @@ def follow(request):
         return JsonResponse({"action": data["action"], "followers": len(user.follower.all())}, status=200)
     except User.DoesNotExist:
         return JsonResponse({"error": "User doesn't exist."}, status=400)
+
+
+def following_list(request):
+    if request.method == "GET":
+        return render(request, 'network/following.html', {
+            "following_list": request.user.following.all()
+        })
