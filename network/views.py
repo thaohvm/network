@@ -87,11 +87,12 @@ def post(request):
 
         # Paginator
         paginator = Paginator(data, 10)  # Show 10 post per page.
-        page = paginator.get_page(request.GET.get('page'))
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
         return render(request, "network/post.html", {
             "new_post_form": NewPostForm(None, initial={}),
-            "page": page
+            "page_obj": page_obj
         })
 
 
@@ -103,7 +104,7 @@ def profile(request, username=None):
                 username=username) if username else request.user
             posts = Post.objects.filter(user=user)
             # Paginator
-            paginator = Paginator(posts, 3)  # Show 10 post per page.
+            paginator = Paginator(posts, 10)  # Show 10 post per page.
             page_number = request.GET.get('page')
             page_obj = paginator.get_page(page_number)
 

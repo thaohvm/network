@@ -26,7 +26,7 @@
     </tr>
 </table>
 
-{% for post in posts %}
+{% for post in page_obj %}
 <table class="table-bordered post-table">
     <tr>
         <th>
@@ -42,6 +42,7 @@
 </table>
 {% endfor %}
 
+<!-- Pagination -->
 <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
