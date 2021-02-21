@@ -47,11 +47,9 @@
             <a class="page-link" href="?page={{ page_obj.previous_page_number }}">previous</a>
         {% endif %}
 
-        {% if page_obj.number %}
-            <a class="page-item"><a class="page-link">{{ page_obj.number }}</a>
-        {% else %}
-            <a class="page-item"><a class="page-link">0</a>
-        {% endif %}
+        <span class="page-item">
+            <a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a>
+        </span>
 
         {% if page_obj.has_next %}
             <a class="page-link" href="?page={{ page_obj.next_page_number }}">next</a>
