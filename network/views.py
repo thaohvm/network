@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest, JsonResponse
+from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
@@ -77,15 +78,20 @@ def post(request):
             obj = form.save(commit=False)
             obj.user = request.user
             obj.save()
-            return HttpResponseRedirect(reverse("post"))
+        return HttpResponseRedirect(reverse("post"))
     else:
         # GET
         posts = sorted(Post.objects.all(), reverse=True, key=lambda p: p.time)
         # Tuples of (post, like->boolean)
         data = [(post, request.user in post.like.all()) for post in posts]
+
+        # Paginator
+        paginator = Paginator(data, 10)  # Show 10 post per page.
+        page = paginator.get_page(request.GET.get('page'))
+
         return render(request, "network/post.html", {
-            "data": data,
             "new_post_form": NewPostForm(None, initial={}),
+            "page": page
         })
 
 
@@ -96,6 +102,11 @@ def profile(request, username=None):
             user = User.objects.get(
                 username=username) if username else request.user
             posts = Post.objects.filter(user=user)
+            # Paginator
+            paginator = Paginator(posts, 3)  # Show 10 post per page.
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
+
             return render(request, "network/profile.html", {
                 "user": user,
                 "posts": posts,
@@ -103,6 +114,7 @@ def profile(request, username=None):
                 "followed": request.user in user.follower.all(),
                 "followers": len(user.follower.all()),
                 "followings": len(user.following.all()),
+                "page_obj": page_obj
             })
         except User.DoesNotExist:
             return HttpResponseBadRequest("Invalid username!")
@@ -154,6 +166,7 @@ def follow(request):
         return JsonResponse({"action": data["action"], "followers": len(user.follower.all())}, status=200)
     except User.DoesNotExist:
         return JsonResponse({"error": "User doesn't exist."}, status=400)
+
 
 @login_required(login_url='/login')
 def following_list(request):
