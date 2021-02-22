@@ -9,7 +9,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
-from .forms import NewPostForm
+from .forms import NewPostForm, EditPostForm
 from .models import User, Post
 
 
@@ -82,6 +82,7 @@ def post(request):
     else:
         # GET
         posts = sorted(Post.objects.all(), reverse=True, key=lambda p: p.time)
+
         # Tuples of (post, like->boolean)
         data = [(post, request.user in post.like.all()) for post in posts]
 
@@ -92,7 +93,7 @@ def post(request):
 
         return render(request, "network/post.html", {
             "new_post_form": NewPostForm(None, initial={}),
-            "page_obj": page_obj
+            "page_obj": page_obj,
         })
 
 
@@ -180,3 +181,27 @@ def following_list(request):
             "following_list": following_list,
             "posts": posts
         })
+
+
+def edit_post(request, id):
+    if request.method == "GET":
+        try:
+            post = Post.objects.get(id=id)
+            if post.user != request.user:
+                return HttpResponseBadRequest("Invalid request!")
+            return render(request, "network/edit_post.html", {
+                "post": post,
+                "edit_post_form": EditPostForm(None, initial={
+                    "id": id,
+                    "content": post.content,
+                },
+                ),
+            })
+        except Post.DoesNotExist:
+            return HttpResponseBadRequest("Invalid request!")
+    else:
+        form = EditPostForm(request.POST)
+        if form.is_valid():
+            new_content = form.cleaned_data["request.POST"]
+            post.save()
+        return HttpResponseRedirect(reverse("post", args=[post]))

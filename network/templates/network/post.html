@@ -21,13 +21,19 @@
 <table class="table-bordered post-table">
     <tr>
         <th>
-            <a class="edit_post" href="#"></a>{{ d.0.user }}
+            <a class="profile" href="{% url 'profile' username=d.0.user %}">{{ d.0.user }}</a>
         </th>
     </tr>
     <tr>
         <td>
             <div class="post-time">{{ d.0.time }}</div>
             <div class="post-content">{{ d.0.content }}</div>
+            
+            {% if d.0.user == request.user %}
+            <a class="edit_post" href="{% url 'edit_post' d.0.id %}">Edit</a>
+            <br/>
+            {% endif %}
+
             {% if d.1 %}
             <button class="post-like" data-post-id="{{ d.0.id }}" data-action="unlike">Unlike {{ d.0.like.count }}</button>
             {% else %}

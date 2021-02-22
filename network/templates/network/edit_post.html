@@ -1,0 +1,18 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+<h2>Edit Post</h2>
+<div class="item">
+    <div>Created: {{ post.time }}</div>
+    <div>Creator: {{ post.user }}</div>
+    <form action="{% url 'edit_post' post.id %}" method="put">
+        {% csrf_token %}
+        <table class="edit_form">
+            {{ edit_post_form.as_table }}
+        </table>
+        <input class="submit_button" type="submit" value="Post">
+    </form>
+</div>
+
+{% endblock %}
