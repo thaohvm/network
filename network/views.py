@@ -200,8 +200,7 @@ def edit_post(request, id):
         except Post.DoesNotExist:
             return HttpResponseBadRequest("Invalid request!")
     else:
-        form = EditPostForm(request.POST)
-        if form.is_valid():
-            new_content = form.cleaned_data["request.POST"]
-            post.save()
-        return HttpResponseRedirect(reverse("post", args=[post]))
+        post = Post.objects.get(id=id)
+        post.content = request.POST["content"]
+        post.save()
+        return HttpResponseRedirect(reverse("post"))
