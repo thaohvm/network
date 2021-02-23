@@ -27,15 +27,18 @@
     <tr>
         <td>
             <div class="post-time">{{ d.0.time }}</div>
-            <div class="post-content">{{ d.0.content }}</div>
-            
+            <div id="post-content-{{ d.0.id }}" class="post-content" data-post-id="{{ d.0.id }}">{{ d.0.content }}</div>
+            <textarea id="post-content-edit-{{ d.0.id }}" class="post-content-edit" data-post-id="{{ d.0.id }}" style="display: none;"></textarea>
             {% if d.0.user == request.user %}
-            <a class="edit_post" href="{% url 'edit_post' d.0.id %}">Edit</a>
-            <br/>
+            <button id="post-edit-{{ d.0.id }}" class="post-edit" data-post-id="{{ d.0.id }}">Edit</button>
+            <button id="post-edit-save-{{ d.0.id }}" class="post-edit-save" data-post-id="{{ d.0.id }}" style="display: none;">Save</button>
+            <button id="post-edit-cancel-{{ d.0.id }}" class="post-edit-cancel" data-post-id="{{ d.0.id }}" style="display: none;">Cancel</button>
+            <br />
             {% endif %}
 
             {% if d.1 %}
-            <button class="post-like" data-post-id="{{ d.0.id }}" data-action="unlike">Unlike {{ d.0.like.count }}</button>
+            <button class="post-like" data-post-id="{{ d.0.id }}" data-action="unlike">Unlike {{ d.0.like.count
+                }}</button>
             {% else %}
             <button class="post-like" data-post-id="{{ d.0.id }}" data-action="like">Like {{ d.0.like.count }}</button>
             {% endif %}
@@ -46,23 +49,23 @@
 
 <!-- Pagination -->
 <nav aria-label="...">
-<div class="pagination">
-    <span class="page-item">
-        {% if page_obj.has_previous %}
+    <div class="pagination">
+        <span class="page-item">
+            {% if page_obj.has_previous %}
             <a class="page-link" href="?page=1">&laquo; first</a>
             <a class="page-link" href="?page={{ page_obj.previous_page_number }}">previous</a>
-        {% endif %}
+            {% endif %}
 
-        <span class="page-item">
-            <a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a>
-        </span>
+            <span class="page-item">
+                <a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a>
+            </span>
 
-        {% if page_obj.has_next %}
+            {% if page_obj.has_next %}
             <a class="page-link" href="?page={{ page_obj.next_page_number }}">next</a>
             <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-        {% endif %}
-    </span>
-</div>
+            {% endif %}
+        </span>
+    </div>
 </nav>
 
 {% endblock %}

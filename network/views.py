@@ -70,6 +70,7 @@ def register(request):
         return render(request, "network/register.html")
 
 
+@csrf_exempt
 @login_required(login_url='/login')
 def post(request):
     if request.method == "POST":
@@ -79,6 +80,19 @@ def post(request):
             obj.user = request.user
             obj.save()
         return HttpResponseRedirect(reverse("post"))
+    elif request.method == "PUT":
+        data = json.loads(request.body)
+        try:
+            post_id = data["id"]
+            post = Post.objects.get(id=int(post_id))
+            if request.user == post.user:
+                post.content = data["content"]
+                post.save()
+                return JsonResponse({"id": post_id}, status=200)
+            else:
+                return JsonResponse({"id": post_id, "error": "Permission denied."}, status=403)
+        except Post.DoesNotExist:
+            return JsonResponse({"id": post_id, "error": "Post doesn't exist."}, status=400)
     else:
         # GET
         posts = sorted(Post.objects.all(), reverse=True, key=lambda p: p.time)
@@ -181,26 +195,3 @@ def following_list(request):
             "following_list": following_list,
             "posts": posts
         })
-
-
-def edit_post(request, id):
-    if request.method == "GET":
-        try:
-            post = Post.objects.get(id=id)
-            if post.user != request.user:
-                return HttpResponseBadRequest("Invalid request!")
-            return render(request, "network/edit_post.html", {
-                "post": post,
-                "edit_post_form": EditPostForm(None, initial={
-                    "id": id,
-                    "content": post.content,
-                },
-                ),
-            })
-        except Post.DoesNotExist:
-            return HttpResponseBadRequest("Invalid request!")
-    else:
-        post = Post.objects.get(id=id)
-        post.content = request.POST["content"]
-        post.save()
-        return HttpResponseRedirect(reverse("post"))
