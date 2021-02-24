@@ -2,10 +2,9 @@
 {% load static %}
 
 {% block body %}
-<h2>All Posts</h2>
 
 <!-- New Post -->
-<h3>New Post</h3>
+<h4>New Post</h4>
 <div class="item">
     <form action="{% url 'post' %}" method="post">
         {% csrf_token %}
@@ -17,6 +16,7 @@
 </div>
 
 <!-- List of posts -->
+<h4>All Posts</h4>
 {% for d in page_obj %}
 <table class="table-bordered post-table">
     <tr>

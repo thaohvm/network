@@ -5,7 +5,19 @@
 }
 
 .post-time {
-    font-size: 10px;
+    font-size: 12px;
+}
+
+#id_content {
+    width: 1100px;
+    height: 100px;
+    padding: 10px 10px;
+    margin: 10px 10px 10px 0;
+    margin-left: 2%;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
 }
 
 .post-content-edit {
@@ -23,4 +35,30 @@
 
 .page-link, .page-item {
     display: inline;
+}
+
+.submit_button {
+    background-color: rgb(65, 141, 228);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px 0 0 1100px;
+    cursor: pointer;
+}
+
+.post-edit, .post-edit-save, .post-edit-cancel {
+    background-color: rgb(97, 103, 109);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    display: inline-block;
+    font-size: 13px;
+    margin: 15px 2px;
+    cursor: pointer; 
+}
+
+.submit_button:hover, .post-edit:hover, .post-edit-save:hover, .post-edit-cancel:hover {
+    background-color: #305caf
 }
