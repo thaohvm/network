@@ -117,7 +117,7 @@ def profile(request, username=None):
         try:
             user = User.objects.get(
                 username=username) if username else request.user
-            posts = Post.objects.filter(user=user)
+            posts = sorted(Post.objects.filter(user=user), reverse=True, key=lambda p:p.time)
             # Paginator
             paginator = Paginator(posts, 10)  # Show 10 post per page.
             page_number = request.GET.get('page')

@@ -4,7 +4,7 @@
 <h2>Following List</h2>
 
 <ul>
-    <table id="following-list">
+    <table class="table-bordered post-table" id="following-list">
         {% for fl in following_list %}
         <tr>
             <td><a href="profile/{{ fl.username }}">{{ fl.username }}</a></td>
@@ -24,7 +24,6 @@
         <td>
             <div class="post-time">{{ post.time }}</div>
             <div class="post-content">{{ post.content }}</div>
-            
         </td>
     </tr>
 </table>
