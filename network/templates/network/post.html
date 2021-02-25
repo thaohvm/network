@@ -37,8 +37,7 @@
             {% endif %}
 
             {% if d.1 %}
-            <button class="post-like" data-post-id="{{ d.0.id }}" data-action="unlike">Unlike {{ d.0.like.count
-                }}</button>
+            <button class="post-like" data-post-id="{{ d.0.id }}" data-action="unlike">Unlike {{ d.0.like.count }}</button>
             {% else %}
             <button class="post-like" data-post-id="{{ d.0.id }}" data-action="like">Like {{ d.0.like.count }}</button>
             {% endif %}

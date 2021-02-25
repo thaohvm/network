@@ -3,7 +3,7 @@
 {% block body %}
 <h2>Following List</h2>
 
-<ul>
+<!-- <ul>
     <table class="table-bordered post-table" id="following-list">
         {% for fl in following_list %}
         <tr>
@@ -11,13 +11,13 @@
         </tr>
         {% endfor %}
     </table>
-</ul>
+</ul> -->
 
 {% for post in posts %}
 <table class="table-bordered post-table">
     <tr>
         <th>
-            <a class="edit_post" href="#"></a>{{ post.user }}
+            <a class="profile" href="profile/{{ post.user }}">{{ post.user }}</a>
         </th>
     </tr>
     <tr>
